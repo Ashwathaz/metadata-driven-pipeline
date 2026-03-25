@@ -1,0 +1,11 @@
+{
+  "app_name": "ai-cicd-app",
+  "version": "1.0.0",
+  "must_have_files": [
+    "app/index.html",
+    "app/style.css"
+  ],
+  "expected_title": "AI CI/CD App",
+  "framework": "html-css",
+  "port": 80
+}

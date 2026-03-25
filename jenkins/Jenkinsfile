@@ -1,0 +1,89 @@
+pipeline {
+    agent any
+    
+    triggers {
+        pollSCM('* * * * *')
+    }
+    
+    environment {
+        DOCKER_IMAGE = "app"
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        
+        stage('Pre-check') {
+            steps {
+                script {
+                    def metadataExists = fileExists('config/metadata.json')
+                    def codeExists = fileExists('app/index.html')
+                    
+                    if (!metadataExists && !codeExists) {
+                        error("Waiting for Implementation and Development Teams")
+                    } else if (!metadataExists) {
+                        error("Waiting for Implementation Team")
+                    } else if (!codeExists) {
+                        error("Waiting for Development Team")
+                    } else {
+                        echo "Both metadata and code exist. Proceeding pipeline..."
+                    }
+                }
+            }
+        }
+        
+        stage('Read Metadata') {
+            steps {
+                script {
+                    def metadata = readJSON file: 'config/metadata.json'
+                    echo "Loaded Metadata for ${metadata.app_name} version ${metadata.version}"
+                }
+            }
+        }
+        
+        stage('Validation') {
+            steps {
+                script {
+                    sh 'python3 validator/validator.py'
+                }
+            }
+        }
+        
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh "docker build -t ${DOCKER_IMAGE}:${BUILD_NUMBER} -f docker/Dockerfile ."
+                }
+            }
+        }
+        
+        stage('Tag Image') {
+            steps {
+                script {
+                    sh "docker tag ${DOCKER_IMAGE}:${BUILD_NUMBER} ${DOCKER_IMAGE}:latest"
+                }
+            }
+        }
+        
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    sh "kubectl apply -f k8s/deployment.yaml"
+                    sh "kubectl apply -f k8s/service.yaml"
+                }
+            }
+        }
+        
+        stage('Print Public URL') {
+            steps {
+                script {
+                    def publicIp = sh(script: 'curl -s ifconfig.me', returnStdout: true).trim()
+                    echo "🚀 App deployed at: http://${publicIp}:30007"
+                }
+            }
+        }
+    }
+}
