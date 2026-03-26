@@ -5,6 +5,7 @@ import subprocess
 import time
 import urllib.request
 import urllib.error
+import uuid
 
 def print_err(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
@@ -59,36 +60,58 @@ def main():
     print("PASS: Content check successful.")
     
     print("--- L3: Runtime Check ---")
-    print("Building temporary Docker image for runtime check...")
-    build_cmd = ["docker", "build", "-t", "app-test-validator", "-f", "docker/Dockerfile", "."]
+    unique_suffix = str(uuid.uuid4())[:8]
+    image_name = f"app-test-validator-{unique_suffix}"
+    container_name = f"app-validator-{unique_suffix}"
+
+    print(f"Building temporary Docker image {image_name} for runtime check...")
+    build_cmd = ["docker", "build", "-t", image_name, "-f", "docker/Dockerfile", "."]
     if subprocess.run(build_cmd).returncode != 0:
         print_err("FAIL: Docker build failed.")
         sys.exit(1)
         
+
+    print("Cleaning up any existing containers safely...")
+    # Clean up legacy fixed container and our unique container if it conflicts
+    for t_name in ["app-validator-container", container_name]:
+        cleanup_res = subprocess.run(["docker", "rm", "-f", t_name], capture_output=True, text=True)
+        if cleanup_res.returncode != 0 and "No such container" not in cleanup_res.stderr:
+            print_err(f"Warning: Cleanup may have failed for {t_name}. {cleanup_res.stderr.strip()}")
+
     print("Running temporary container...")
-    run_cmd = ["docker", "run", "-d", "--rm", "-p", "8080:80", "--name", "app-validator-container", "app-test-validator"]
+    run_cmd = ["docker", "run", "-d", "--rm", "-p", "80", "--name", container_name, image_name]
     print(f"Executing: {' '.join(run_cmd)}")
     result = subprocess.run(run_cmd, capture_output=True, text=True)
     if result.returncode != 0:
         print_err(f"FAIL: Docker run failed. Exit code: {result.returncode}")
-        print_err(f"Logs: {result.stderr}")
+        print_err(f"Logs: {result.stderr.strip()}")
         sys.exit(1)
+        
+    # Get dynamic mapped port
+    port_result = subprocess.run(["docker", "port", container_name, "80"], capture_output=True, text=True)
+    if port_result.returncode != 0 or not port_result.stdout.strip():
+        print_err(f"FAIL: Could not get mapped port. Error: {port_result.stderr.strip()}")
+        subprocess.run(["docker", "stop", container_name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        sys.exit(1)
+        
+    host_port = port_result.stdout.strip().split('\n')[0].split(':')[-1]
+    print(f"Container mapped to host port: {host_port}")
         
     container_id = result.stdout.strip()
     print(f"Container ID: {container_id}")
     
     print("Validating files inside container...")
-    exec_cmd = ["docker", "exec", "app-validator-container", "ls", "-l", "/usr/share/nginx/html/"]
+    exec_cmd = ["docker", "exec", container_name, "ls", "-l", "/usr/share/nginx/html/"]
     exec_result = subprocess.run(exec_cmd, capture_output=True, text=True)
     if exec_result.returncode != 0:
-        print_err(f"FAIL: Could not list files in container. Error: {exec_result.stderr}")
-        subprocess.run(["docker", "stop", "app-validator-container"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print_err(f"FAIL: Could not list files in container. Error: {exec_result.stderr.strip()}")
+        subprocess.run(["docker", "stop", container_name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         sys.exit(1)
     print("Files in /usr/share/nginx/html/:")
     print(exec_result.stdout)
     if "index.html" not in exec_result.stdout:
         print_err("FAIL: index.html not found in container's /usr/share/nginx/html/")
-        subprocess.run(["docker", "stop", "app-validator-container"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.run(["docker", "stop", container_name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         sys.exit(1)
         
     time.sleep(3)
@@ -96,7 +119,7 @@ def main():
     success = False
     for attempt in range(5):
         try:
-            req = urllib.request.Request("http://localhost:8080")
+            req = urllib.request.Request(f"http://localhost:{host_port}")
             with urllib.request.urlopen(req) as response:
                 if response.getcode() == 200:
                     success = True
@@ -111,15 +134,15 @@ def main():
     if not success:
         print_err("FAIL: Runtime check failed.")
         print_err("Fetching container logs...")
-        logs_result = subprocess.run(["docker", "logs", "app-validator-container"], capture_output=True, text=True)
+        logs_result = subprocess.run(["docker", "logs", container_name], capture_output=True, text=True)
         print_err(f"Container Logs: {logs_result.stdout}\n{logs_result.stderr}")
-        subprocess.run(["docker", "stop", "app-validator-container"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        subprocess.run(["docker", "rmi", "app-test-validator"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.run(["docker", "stop", container_name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.run(["docker", "rmi", image_name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         sys.exit(1)
 
     print("Cleaning up temporary container and image...")
-    subprocess.run(["docker", "stop", "app-validator-container"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    subprocess.run(["docker", "rmi", "app-test-validator"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run(["docker", "stop", container_name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run(["docker", "rmi", image_name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         
     print("PASS: Runtime check successful.")
     print("All validations passed!")
