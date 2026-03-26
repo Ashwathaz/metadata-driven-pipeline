@@ -75,29 +75,37 @@ pipeline {
                     // Bind Jenkins kubeconfig file credential to KUBECONFIG environment variable securely
                     withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
                         
-                        echo "--- Debug: Kubeconfig View ---"
-                        sh "kubectl config view"
+                        echo "--- Debug & Cluster Validation ---"
+                        sh '''
+                            export KUBECONFIG=$KUBECONFIG
+                            
+                            echo "--- Debug: Kubeconfig View ---"
+                            kubectl config view
+                            
+                            echo "--- Debug: Fetching Nodes before Deploy ---"
+                            if ! kubectl get nodes; then
+                                echo "FATAL: Kubernetes cluster is unreachable or authentication was rejected. Verify the 'kubeconfig' credential."
+                                exit 1
+                            fi
+                        '''
                         
-                        echo "--- Debug: Fetching Nodes before Deploy ---"
-                        def clusterCheck = sh(script: "kubectl get nodes", returnStatus: true)
-                        if (clusterCheck != 0) {
-                            error "FATAL: Kubernetes cluster is unreachable or authentication was rejected. Verify the 'kubeconfig' credential in Jenkins Settings."
-                        }
-                        
-                        echo "--- Applying Deployment Resources ---"
-                        def deployCheck = sh(script: "kubectl apply -f k8s/deployment.yaml", returnStatus: true)
-                        if (deployCheck != 0) {
-                            echo "Warning: Standard apply failed. Executing fallback with --validate=false..."
-                            def fallbackCheck = sh(script: "kubectl apply --validate=false -f k8s/deployment.yaml", returnStatus: true)
-                            if (fallbackCheck != 0) {
-                                error "FATAL: Deployment aborted. Resilient fallback also failed applying k8s/deployment.yaml."
-                            }
-                        }
-                        
-                        def serviceCheck = sh(script: "kubectl apply -f k8s/service.yaml", returnStatus: true)
-                        if (serviceCheck != 0) {
-                            error "FATAL: Failed to apply k8s/service.yaml."
-                        }
+                        echo "--- Applying Kubernetes Resources ---"
+                        sh '''
+                            export KUBECONFIG=$KUBECONFIG
+                            
+                            if ! kubectl apply -f k8s/deployment.yaml; then
+                                echo "Warning: Standard apply failed. Executing fallback with --validate=false..."
+                                if ! kubectl apply --validate=false -f k8s/deployment.yaml; then
+                                    echo "FATAL: Deployment aborted. Resilient fallback also failed applying k8s/deployment.yaml."
+                                    exit 1
+                                fi
+                            fi
+                            
+                            if ! kubectl apply -f k8s/service.yaml; then
+                                echo "FATAL: Failed to apply k8s/service.yaml."
+                                exit 1
+                            fi
+                        '''
                         
                         echo "✅ Kubernetes deployment successfully concluded."
                     }
