@@ -6,5 +6,5 @@
     "app/style.css"
   ],
   "expected_title": "AI CI/CD App",
-  "port": 8080
+  "port": 8081
 }
