@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- MUST maintain this title for L2 verification in Jenkins -->
     <title>AI CI/CD App</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
@@ -13,23 +14,23 @@
         <div class="nav-container">
             <div class="nav-left">
                 <div class="logo">
-                    <span class="logo-icon">AJ</span>
-                    <span class="logo-text">ALJAZEERA</span>
+                    <span class="logo-icon">AZ</span>
+                    <span class="logo-text">ashz//zeus</span>
                 </div>
                 <ul class="nav-links">
-                    <li><a href="#">News ⏷</a></li>
-                    <li><a href="#">Middle East</a></li>
-                    <li><a href="#">Explained</a></li>
-                    <li><a href="#">Opinion</a></li>
-                    <li><a href="#">Sport</a></li>
-                    <li><a href="#">Video</a></li>
+                    <li><a href="#">Overview ⏷</a></li>
+                    <li><a href="#">Validation</a></li>
+                    <li><a href="#">Docker</a></li>
+                    <li><a href="#">Jenkins</a></li>
+                    <li><a href="#">Testing</a></li>
+                    <li><a href="#">Logs</a></li>
                     <li><a href="#">More ⏷</a></li>
                 </ul>
             </div>
             <div class="nav-right">
-                <a href="#" class="live-btn">▶ LIVE</a>
+                <a href="#" class="live-btn" style="color:var(--accent-red)">▶ SECURE</a>
                 <button class="search-btn">🔍</button>
-                <button class="signup-btn">Sign up</button>
+                <button class="signup-btn">Trigger Build</button>
             </div>
         </div>
     </nav>
@@ -37,8 +38,8 @@
     <!-- Breaking News Banner -->
     <div class="breaking-banner">
         <div class="banner-content">
-            <span class="breaking-label">BREAKING</span> <span class="divider">|</span>
-            <span class="breaking-text">Tehran pledges regional response after Iran nuclear, industrial sites attacked</span>
+            <span class="breaking-label">UPDATE</span> <span class="divider">|</span>
+            <span class="breaking-text">Jenkins build successfully completed across all mandatory validation stages</span>
         </div>
         <button class="close-btn">✕</button>
     </div>
@@ -46,12 +47,12 @@
     <!-- Trending Bar -->
     <div class="trending-bar">
         <div class="trending-container">
-            <span class="trending-label">📈 Trending</span>
+            <span class="trending-label">📈 Stages</span>
             <ul class="trending-links">
-                <li><a href="#">US-Israel war on Iran</a></li>
-                <li><a href="#">Tracking Israel's ceasefire violations</a></li>
-                <li><a href="#">Russia-Ukraine war</a></li>
-                <li><a href="#">Donald Trump</a></li>
+                <li><a href="#">L1: File Check</a></li>
+                <li><a href="#">L2: Content Check</a></li>
+                <li><a href="#">L3: Runtime Check</a></li>
+                <li><a href="#">Docker Deploy</a></li>
             </ul>
         </div>
     </div>
@@ -62,35 +63,35 @@
         <section class="col-left">
             <article class="featured-article">
                 <div class="featured-image">
-                    <img src="https://images.unsplash.com/photo-1585829365295-ab7cd400c167?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="News Anchor">
-                    <div class="live-badge">LIVE</div>
+                    <img src="https://placehold.co/800x500/212121/white?text=Metadata-Driven+Pipeline" alt="Pipeline Dashboard">
+                    <div class="live-badge">ACTIVE</div>
                 </div>
                 <div class="featured-content">
-                    <span class="category">BREAKING</span>
-                    <h2>US-Israeli war on Iran widens with first attack from Yemen</h2>
+                    <span class="category">SUCCESS</span>
+                    <h2>Metadata-Driven Deployment Pipeline Passes All Stages</h2>
                 </div>
             </article>
 
             <div class="live-updates">
                 <div class="live-updates-header">
-                    <span class="recording-icon"></span> LIVE UPDATES
+                    <span class="recording-icon"></span> PIPELINE LOGS
                 </div>
                 <ul class="updates-list">
                     <li>
                         <span class="time">2m ago:</span>
-                        <a href="#">US military denies Iranian claim of attacks on US forces in Dubai</a>
+                        <a href="#">Metadata validation completed. Checked for index.html and style.css in workspace.</a>
                     </li>
                     <li>
                         <span class="time">7m ago:</span>
-                        <a href="#">Iraq's prime minister condemns attack on house of Kurdish region's president</a>
+                        <a href="#">Content check passed. HTML file correctly contains expected_title defined in config.</a>
                     </li>
                     <li>
                         <span class="time">17m ago:</span>
-                        <a href="#">Photos: Impact of Iranian missiles in central Israel</a>
+                        <a href="#">Docker build finished. Temporary image instantiated for localized sandbox verification.</a>
                     </li>
                     <li>
                         <span class="time">18m ago:</span>
-                        <a href="#">Qatar says targeted by numerous Iranian drones today, all intercepted</a>
+                        <a href="#">Runtime network validated. Local Nginx wrapper returned 200 OK HTTP status code.</a>
                     </li>
                 </ul>
             </div>
@@ -99,42 +100,42 @@
         <!-- Middle Column -->
         <section class="col-middle">
             <article class="middle-featured">
-                <img src="https://images.unsplash.com/photo-1596720426673-e4e14290f0cc?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Soldiers" class="middle-img">
-                <h2><a href="#">Yemen's Houthis launch missile attack on Israel as war with Iran intensifies</a></h2>
+                <img src="https://placehold.co/600x400/f7941d/white?text=Docker+Containerization" alt="Docker Containerization" class="middle-img">
+                <h2><a href="#">Docker Containerization Automates Final Service Deployment Environment</a></h2>
             </article>
 
             <div class="news-list">
                 <article class="news-item">
                     <div class="news-text">
-                        <h3><a href="#">Iran warns neighbours not to let 'enemies run the war' from their land</a></h3>
+                        <h3><a href="#">Python Validator intercepts pipeline to enforce strict metadata caching mapping</a></h3>
                     </div>
-                    <img src="https://images.unsplash.com/photo-1612444530582-fc66183b16f7?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="Smoke" class="news-thumb">
+                    <img src="https://placehold.co/200x150/c8102e/white?text=Validator" alt="Validator" class="news-thumb">
                 </article>
                 <article class="news-item">
                     <div class="news-text">
-                        <h3><a href="#">At least 15 US troops wounded in Iran strike on Saudi airbase: Reports</a></h3>
+                        <h3><a href="#">Jenkins declarative pipeline manages the UNIX runtime execution states securely</a></h3>
                     </div>
-                    <img src="https://images.unsplash.com/photo-1580130058022-861f6c449176?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="Military" class="news-thumb">
+                    <img src="https://placehold.co/200x150/008CBA/white?text=Jenkins" alt="Jenkins" class="news-thumb">
                 </article>
                 <article class="news-item text-only">
-                    <h3><a href="#">At least 22 migrants die off Greece after 6 days at sea</a></h3>
+                    <h3><a href="#">If structural metadata is missing, pipeline rejects immediately to prevent faulty builds</a></h3>
                 </article>
                 <article class="news-item text-only">
-                    <h3><a href="#">Russian strikes on Ukraine kill 4 as deal to end war dims</a></h3>
+                    <h3><a href="#">Dynamic URL resolution maps open ports directly to Jenkins build output logs using ifconfig</a></h3>
                 </article>
                 <article class="news-item text-only">
-                    <h3><a href="#">Nepal's ex-PM Oli detained over alleged role in deadly protest crackdown</a></h3>
+                    <h3><a href="#">Idempotent container cleanup strategy ensures zero overlapped Docker naming conflicts</a></h3>
                 </article>
                 <article class="news-item text-only">
-                    <h3><a href="#">Pakistan's Naseem Shah under fire after criticism of politician's PSL visit</a></h3>
+                    <h3><a href="#">Developer branches are instantly checked against constraints before formal integration</a></h3>
                 </article>
             </div>
             
             <article class="bottom-news">
                 <div class="news-text">
-                    <h2><a href="#">US-Israel war on Iran: What's happening on day 5 of the conflict</a></h2>
+                    <h2><a href="#">How Jenkins Orchestrates the Final Local Network Deploy to External Port 8081</a></h2>
                 </div>
-                <img src="https://images.unsplash.com/photo-1533089408018-b2a129d3bd13?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Building" class="bottom-thumb">
+                <img src="https://placehold.co/300x200/4CAF50/white?text=Deployed" alt="Deployed" class="bottom-thumb">
             </article>
 
         </section>
@@ -142,64 +143,64 @@
         <!-- Right Column -->
         <section class="col-right">
             <div class="sidebar-section">
-                <h3 class="section-title">MUST READ</h3>
+                <h3 class="section-title">PROJECT GUIDES</h3>
                 <ul class="sidebar-list">
                     <li>
                         <div class="sidebar-text">
-                            <h4><a href="#">Iran footballers pay tribute to victims of school strike at start of war</a></h4>
+                            <h4><a href="#">Understanding the Gating Mechanism using metadata.json constraints</a></h4>
                         </div>
-                        <img src="https://images.unsplash.com/photo-1518605368461-1e1e127602eb?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80" alt="Football" class="sidebar-thumb">
+                        <img src="https://placehold.co/150x100/333/fff?text=Constraint" alt="Constraint" class="sidebar-thumb">
                     </li>
                     <li>
                         <div class="sidebar-text">
-                            <h4><a href="#">Guns in the streets as US, Israel intensify month-long attacks across Iran</a></h4>
+                            <h4><a href="#">Why Kubernetes was swapped for pure, lightweight Docker Containerization</a></h4>
                         </div>
                     </li>
                     <li>
                         <div class="sidebar-text">
-                            <h4><a href="#">Philippine transport strikers say Marcos Jr failing to control oil prices</a></h4>
+                            <h4><a href="#">How Python Urllib tests live connectivity inside temporary built containers</a></h4>
                         </div>
                     </li>
                 </ul>
             </div>
 
             <div class="sidebar-section">
-                <h3 class="section-title">MORE HEADLINES</h3>
+                <h3 class="section-title">SYSTEM ARCHITECTURE</h3>
                 <ul class="sidebar-list">
                     <li>
                         <div class="sidebar-text">
-                            <h4><a href="#">Israel's unending attacks in Lebanon push country's population to the brink</a></h4>
+                            <h4><a href="#">Jenkinsfile: Utilizing the readJSON step for native file variable parsing</a></h4>
                         </div>
-                        <img src="https://images.unsplash.com/photo-1507676184212-d0330a15673c?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80" alt="Lebanon" class="sidebar-thumb">
+                        <img src="https://placehold.co/150x100/008CBA/fff?text=Parsing" alt="Parsing" class="sidebar-thumb">
                     </li>
                     <li>
                         <div class="sidebar-text">
-                            <h4><a href="#">Morocco believe case of the AFCON crown is closed despite Senegal appeal</a></h4>
+                            <h4><a href="#">Best practices for structuring L1 file existence verifications sequentially</a></h4>
                         </div>
                     </li>
                     <li>
                         <div class="sidebar-text">
-                            <h4><a href="#">Defending champion Aryna Sabalenka and Coco Gauff meet in Miami Open final</a></h4>
+                            <h4><a href="#">Securing active deployments with clean teardown commands mapped in shell</a></h4>
                         </div>
                     </li>
                 </ul>
             </div>
 
             <div class="sidebar-section">
-                <h3 class="section-title">OPINION</h3>
+                <h3 class="section-title">TEAM INSIGHTS</h3>
                 <ul class="sidebar-list">
                     <li class="opinion-item">
-                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" alt="Author" class="author-thumb">
+                        <img src="https://placehold.co/100x100/555/fff?text=Lead" alt="Author" class="author-thumb">
                         <div class="sidebar-text">
-                            <h4><a href="#">How the US and Israel are making the Islamic republic stronger</a></h4>
-                            <span class="author-name">Hossein Dabbagh</span>
+                            <h4><a href="#">Why gated deployments lead to fewer critical production environment crashes</a></h4>
+                            <span class="author-name">DevOps Lead</span>
                         </div>
                     </li>
                     <li class="opinion-item">
-                        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" alt="Author" class="author-thumb">
+                        <img src="https://placehold.co/100x100/777/fff?text=QA" alt="Author" class="author-thumb">
                         <div class="sidebar-text">
-                            <h4><a href="#">The Strait of Hormuz is not just an oil chokepoint</a></h4>
-                            <span class="author-name">Mohammed Al-Hashemi</span>
+                            <h4><a href="#">Static testing alone is not enough: The case for temporary runtime sandboxing</a></h4>
+                            <span class="author-name">QA Engineer</span>
                         </div>
                     </li>
                 </ul>
